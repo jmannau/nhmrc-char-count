@@ -24,7 +24,7 @@ To use this, you will need MS Word 2016. It _may_ with Word 2013, but I have not
 1. Click the `Code` button
 1. In the left hand menu, click `Import`
    ![Import Script](assets/script-import.png)
-1. Copy this link [https://github.com/jmannau/nhmrc-character-count](./nhmrc-character-count.yaml) and click `Import`
+1. Copy this link [https://gist.github.com/jmannau/2b7ba5901485146509d27f27f00f27f2](https://gist.github.com/jmannau/2b7ba5901485146509d27f27f00f27f2) and click `Import`
 1. Once installed click the `Run` button in the ribbon bar
    ![Extension Preview](assets/preview.png)
 1. Highlight any text that you want to check the character count. The NHMRC character count will be displayed in the panel as well as any easy wins to reduce it.
