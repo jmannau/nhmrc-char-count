@@ -1,32 +1,34 @@
-# Office-Addin-TaskPane
+# NHMRC Character Count within MS Word
 
-This repository contains the source code used by the [Yo Office generator](https://github.com/OfficeDev/generator-office) when you create a new Office Add-in that appears in the task pane. You can also use this repository as a sample to base your own project from if you choose not to use the generator. 
+For all those submitting a grant to the NHMRC using their RGMS system I'm sure you're familiar with the write, copy, paste, check character count cycle. I have written a small Word plugin to get the NHMRC character count directly in word.
 
-## TypeScript
+This simple addon, give you the character count for the selected text that will match up with the NHMRC character count from their webpage https://www.nhmrc.gov.au/rgms-character-count.
 
-This template is written using [TypeScript](http://www.typescriptlang.org/). For the JavaScript version of this template, go to [Office-Addin-TaskPane-JS](https://github.com/OfficeDev/Office-Addin-TaskPane-JS).
+It also gives some hints on how you can reduce it by looking for some easy wins. It looks for any of the following:
 
-## Debugging
+- Double spaces
+- Multiple white spaces (like a space followed by a tab)
+- Any `, and` oxford commas
 
-This template supports debugging using any of the following techniques:
+## Background
 
-- [Use a browser's developer tools](https://docs.microsoft.com/office/dev/add-ins/testing/debug-add-ins-in-office-online)
-- [Attach a debugger from the task pane](https://docs.microsoft.com/office/dev/add-ins/testing/attach-debugger-from-task-pane)
-- [Use F12 developer tools on Windows 10](https://docs.microsoft.com/office/dev/add-ins/testing/debug-add-ins-using-f12-developer-tools-on-windows-10)
+The NHMRC uses an online portal for their applications and the sections are often limited to a number of characters. However, their character count is always different from MS word. The reason is that NHMRC count new line characters twice (every new line counts for 2 characters). This simple extension allows you to see the NHMRC character count directly in word.
 
-## Questions and comments
+## Setup Instructions
 
-We'd love to get your feedback about this sample. You can send your feedback to us in the *Issues* section of this repository.
+To use this, you will need MS Word 2016. It _may_ with Word 2013, but I have not tested it.
 
-Questions about Microsoft Office 365 development in general should be posted to [Stack Overflow](http://stackoverflow.com/questions/tagged/office-js+API).  If your question is about the Office JavaScript APIs, make sure it's tagged with  [office-js].
+1. Install the [Microsoft Script Lab Addon](https://store.office.com/app.aspx?assetid=WA104380862) into word.
+1. Once you have the [Script Lab Addon](https://store.office.com/app.aspx?assetid=WA104380862) installed, click the `Script Lab` tab in your ribbon bar.
+   ![MS Word ScriptLab Ribbon Bar](assets/word-ribbon-bar.png)
+1. Click the `Code` button
+1. In the left hand menu, click `Import`
+   ![Import Script](assets/script-import.png)
+1. Copy this link [https://github.com/jmannau/nhmrc-character-count](./nhmrc-character-count.yaml) and click `Import`
+1. Once installed click the `Run` button in the ribbon bar
+   ![Extension Preview](assets/preview.png)
+1. Highlight any text that you want to check the character count. The NHMRC character count will be displayed in the panel as well as any easy wins to reduce it.
 
-## Additional resources
+## Development
 
-* [Office add-in documentation](https://docs.microsoft.com/office/dev/add-ins/overview/office-add-ins)
-* More Office Add-in samples at [OfficeDev on Github](https://github.com/officedev)
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information, see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
-## Copyright
-
-Copyright (c) 2019 Microsoft Corporation. All rights reserved.
+Please feel free to update and improve it. If you do, it would be great to create a pull request and share those improvement everyone else.

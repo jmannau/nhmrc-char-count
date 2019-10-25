@@ -1,0 +1,112 @@
+name: NHMRC Character Count
+description: ""
+host: WORD
+api_set: {}
+script:
+  content: >
+    /* global document, Office, Word */
+
+
+    Office.onReady((info) => {
+      if (info.host === Office.HostType.Word) {
+        Office.context.document.addHandlerAsync(Office.EventType.DocumentSelectionChanged, updateCharCount);
+        hideAllEasyWins();
+      }
+    });
+
+
+    function updateCharCount({ document }:
+    Office.DocumentSelectionChangedEventArgs) {
+      document.getSelectedDataAsync<string>(Office.CoercionType.Text, showCharacterCount);
+    }
+
+
+    function showCharacterCount(result: Office.AsyncResult<string>) {
+      if (result.status == Office.AsyncResultStatus.Failed) {
+        write("An error occured: " + result.error.message);
+      } else if (result.value.length > 0) {
+        write(`NHMRC Character Count = ${nhmrcCharCount(result.value)}`);
+        testForEasyWins(result.value);
+      } else {
+        write("Highlight the text you want to check");
+        // hide all the easy wins
+        hideAllEasyWins();
+      }
+    }
+
+
+    function hideAllEasyWins(){
+      $("#easy-wins li").hide();
+    }
+
+
+    // Function that writes to a div with id='message' on the page.
+
+    function write(message: string) {
+      document.getElementById("char-count").innerText = message;
+    }
+
+
+    function nhmrcCharCount(text: string) {
+      const charCount = text.length;
+      const newlineCount = (text.match(/\r/g) || []).length;
+      return charCount + newlineCount;
+    }
+
+
+    function testForEasyWins(text: string) {
+      // double spaces
+      checkForEasyWin(text, / {2,}/g, "double-spaces", (matches) =>
+        matches === 1 ? `There is 1 occurrence of a multiple spaces` : `There are ${matches}  multiple spaces`
+      );
+      // multiple white spaces
+      checkForEasyWin(text, /[^ \S]{2,}/g, "multiple-whitespace", (matches) =>
+        matches === 1 ? `There is 1 repeated white space` : `There are ${matches} repeated white space`
+      );
+      // oxford commas
+      checkForEasyWin(text, /, and/gi, "oxford-commas", (matches) =>
+        matches === 1 ? "There is 1 oxford comma" : `There are ${matches} oxford commas`
+      );
+    }
+
+
+    function checkForEasyWin(text: string, regex: RegExp, elId: string,
+    formatter: (numberOfMatches: number) => string) {
+      const matches = text.match(regex);
+      const el = document.getElementById(elId);
+      if (matches) {
+        el.innerText = formatter(matches.length);
+        $(el).show();
+      } else {
+        $(el).hide();
+      }
+    }
+  language: typescript
+template:
+  content: "<body class=\"ms-font-m ms-welcome ms-Fabric\">\n\t<header class=\"ms-welcome__header ms-bgColor-neutralLighter\">\n\t\t<h1 class=\"ms-font-su\">NHMRC Character Count</h1>\n\t</header>\n\t<main id=\"app-body\" class=\"ms-welcome__main\">\n\t\t<p id=\"char-count\">Highlight the text you want to count</p>\n\n\t\t<ul id=\"easy-wins\">\n\t\t\t<li id=\"double-spaces\"></li>\n\t\t\t<li id=\"multiple-whitespace\" ></li>\n\t\t\t<li id=\"oxford-commas\"></li>\n\t\t</ul>\n\t</main>\n\t<footer>\n\t\t<h2>About</h2>\n\t\t<p>\n\t\t\tThis extension emulates the way the the NHMRC RGMS counts characters. When you're trying to remove the last\n\t\t\t2\n\t\t\tcharacters over your limit, this will help you identify opportunities.\n\t\t</p>\n\t\t<p>Built by <a href=\"https://binary.com.au\">Binary</a> to save precious time for my wife.</p>\n\t\t<p>\n\t\t\tThis extension is open source and your can help to improve it. The source code is available at\n\t\t\t<a href=\"https://github.com\">Github</a>.\n\t\t</p>\n\t</footer>"
+  language: html
+style:
+  content: |-
+    section.samples {
+        margin-top: 20px;
+    }
+
+    section.samples .ms-Button, section.setup .ms-Button {
+        display: block;
+        margin-bottom: 5px;
+        margin-left: 20px;
+        min-width: 80px;
+    }
+  language: css
+libraries: |
+  https://appsforoffice.microsoft.com/lib/1/hosted/office.js
+  @types/office-js
+
+  office-ui-fabric-js@1.4.0/dist/css/fabric.min.css
+  office-ui-fabric-js@1.4.0/dist/css/fabric.components.min.css
+
+  core-js@2.4.1/client/core.min.js
+  @types/core-js
+
+  jquery@3.1.1
+  @types/jquery@3.3.1
